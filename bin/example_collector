@@ -8,8 +8,8 @@ if __name__ == '__main__':
    # our collector exceeds 59 seconds
    collector = ProcessCollector(limit_execution_seconds = 59)
 
-   collector.count_process('no_of_apaches', 'apache')
-   collector.count_process('no_of_memcached', 'memcached')
+   collector.count_process('count_of_apaches', 'apache')
+   collector.count_process('count_of_memcached', 'memcached')
    collector.disk_usage('root_disk_usage', '/')
    collector.cpu_usage('cpu_usage')
 

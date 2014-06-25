@@ -44,20 +44,24 @@
 
        
      </style>
+     
+     <script>
+       <!--//TRESHOLD_CONFIG//-->
+     </script>
   </head>
 
   <body>
     
     <script>
     
-      function checkTresholds(){
-        var th = [
+      function checkThresholds(){
+        var th = window.thresholds || [
           {q:$('dd[data=load]'), gt:1, lt:1},
           {q:$('dd[data=number_of_peer_procs]'), lt:2},
           {q:$('dd[data=cpu_usage]'), gt:50.0}
         ];
 
-        for(k in th){
+        for(k in window.thresholds){
           th[k].q.each(function(){
             me = $(this);
             if('gt' in th[k]){
@@ -169,7 +173,7 @@
       }
 
       setInterval(checkUpdates, 2000);
-      setInterval(checkTresholds, 2000);
+      setInterval(checkThresholds, 2000);
       query();
 
       });
