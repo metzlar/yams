@@ -1,6 +1,9 @@
-
 from twisted.internet.protocol import DatagramProtocol
 from twisted.internet.task import LoopingCall
+
+import os
+import json
+
 
 class HeartbeatSender(DatagramProtocol):
 
@@ -26,6 +29,17 @@ class HeartbeatSender(DatagramProtocol):
     def connectionRefused(self):
         print "No one listening"
 
+    def read_file(self, path):
+        with open(path, 'r') as f:
+            return f.read()
+            
     def sendHeartBeat(self):
-        with open(self.file_path, 'r') as f:
-            self.transport.write(f.read(), (self.host, self.port))
+        files = []
+        if os.path.isdir(self.file_path):
+            files = os.listdir(self.file_path)
+
+        result = {}
+        for k in files:
+            result[k] = self.read_file(os.path.join(self.file_path, k))
+        
+        self.transport.write(json.dumps(result), (self.host, self.port))

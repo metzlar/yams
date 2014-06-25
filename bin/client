@@ -7,23 +7,25 @@ import argparse
 
 parser = argparse.ArgumentParser(
     description='''
-    Read a JSON <file> and send the contents
+    Read JSON files from directory <path> and send the contents
     repeatedly to a YAMS server at <host>:<port>
     ''')
-parser.add_argument(
-    'file', help='path to JSON file')
 parser.add_argument(
     'host', help='host of YAMS server')
 parser.add_argument(
     'port', help='port of YAMS server')
-    
+parser.add_argument(
+    '--json-dir', dest='path',
+    default='/tmp/yams',
+    help='path where this client can find its properties')
+
 
 if __name__ == '__main__':
 
     args = parser.parse_args()
     
     heartbeatSenderObj = HeartbeatSender(
-        str(args.file), str(args.host), int(args.port))
+        str(args.path), str(args.host), int(args.port))
 
     reactor.listenUDP(0, heartbeatSenderObj)
     reactor.run()

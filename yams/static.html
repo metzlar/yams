@@ -1,20 +1,120 @@
+<!DOCTYPE html>
 <html>
 
   <head>
      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+     <style>
+       body{
+         font-family:courier;
+         font-size:12px;
+       }
+
+       span.alert,
+       span.warn{
+         margin:5px;
+         text-shadow:1px;
+       }
+
+       .alert,
+       .update-alert,
+       .gt-alert,
+       .lt-alert{
+         color: red;
+         font-weight: bold;
+         margin: 0;
+         padding: 0;
+       }
+
+       .warn,
+       .update-warn{
+         color: orange;
+         font-weight: bold;
+       }
+
+       .bordered{
+         border:1px solid;
+       }
+
+       .dl-horizontal{
+         margin-bottom:0px!important;
+       }
+
+       
+     </style>
   </head>
 
   <body>
     
     <script>
     
-      var nowString;
+      function checkTresholds(){
+        var th = [
+          {q:$('dd[data=load]'), gt:1, lt:1},
+          {q:$('dd[data=number_of_peer_procs]'), lt:2}
+        ];
+
+        for(k in th){
+          th[k].q.each(function(){
+            me = $(this);
+            if('gt' in th[k]){
+              if(parseInt(me.text())>th[k].gt){
+                me.addClass('gt-alert');
+              } else {
+                me.removeClass('gt-alert');
+              }
+            }
+            if('lt' in th[k]){
+              if(parseInt(me.text())<th[k].lt){
+                me.addClass('lt-alert');
+              } else {
+                me.removeClass('lt-alert');
+              }
+            }
+          });
+        }
+      }
+
+      function checkUpdates(){
+        var me, ud, dif, nd, l, span;
+        nd = $('dd[data=YAMS][updated]').attr('updated');
+        $('dd[updated]').each(function(){
+          me = $(this);
+          l = $('dt[data='+me.attr('data')+']');
+          ud = me.attr('updated');
+          dif = parseInt(nd - ud);
+      
+          span = $(
+            'span.update-alert', me
+          ).add('span.update-warn', me);
+
+          if(dif < 5){
+            span.remove();
+	    me.attr('title', null);
+          } else if(dif > 10){
+	    if(span.length<2){
+	      span = $(
+	        '<span class="update-alert">&gt;10secs</span>'
+	      ).appendTo(me);
+	    }
+            me.attr('title', '>10 seconds since last update');
+          } else if(dif > 5){
+	    if(span.length<1){
+	      span = $(
+	        '<span class="update-warn">&gt;5secs</span>'
+	      ).appendTo(me);
+	    }
+            me.attr('title', '>5 seconds since last update');      
+          }
+        });
+      }
 
       function process(node, key, value){
         var dt = $('dt[data="'+key+'"]', node);
         if(dt.length === 0){
           if(node.prop("tagName").toUpperCase()!='DL'){
-            console.log('not dl', node);
             node = $('<dl></dl>').appendTo(node);
           }
           dt = $('<dt></dt>').appendTo(node);
@@ -28,20 +128,27 @@
           dd.attr('data', key);
         }
         
-        if(typeof value === 'object'){
-          var sub = $('dl', dd);
-          if(sub.length === 0){
-            sub = $(
-              '<dl></dl>'
-            ).appendTo(dd);
+        if(typeof value === 'object' && value.length === 2){
+          dd.attr('updated', value[1]);
+
+          if(typeof value[0] === 'object'){
+            var sub = $('dl', dd);
+            if(sub.length === 0){
+              sub = $(
+                '<dl></dl>'
+              ).appendTo(dd);
+            }
+            $.each(value[0], function(k, v){
+              process(sub, k, v);
+            });
+          } else {
+            dd.text(value[0]);
           }
-          $.each(value, function(k, v){
-            process(sub, k, v);
-          });
         } else {
-          dd.text(value);
+          $.each(value, function(k, v){
+            process(dd, k, v);
+          });
         }
-        dd.attr('updated', nowString);
       }
 
       $(function(){
@@ -49,13 +156,19 @@
       var query = function(cb){
       
       $.getJSON('.', {query:1}, function( data ) {
-          nowString = (new Date()).toISOString();
           process($('body'), 'YAMS', data);
+	    
+	  var machines = $('dl dl dl');
+
+	  machines.addClass('dl-horizontal');
+	  machines.parent().addClass('bordered');
       });
 
       setTimeout(query, 1900);
       }
 
+      setInterval(checkUpdates, 2000);
+      setInterval(checkTresholds, 2000);
       query();
 
       });

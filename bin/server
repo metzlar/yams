@@ -1,15 +1,31 @@
 #!/usr/bin/env python
 
 from yams.server import HeartbeatReceiver
-
 from twisted.internet import reactor
+import argparse
+
+
+parser = argparse.ArgumentParser(
+    description='''
+    The main YAMS UDP listener (server)
+
+    
+    ''')
+parser.add_argument(
+    'port', help='port of this YAMS server')
+parser.add_argument(
+    '--memcache-key', dest='key',
+    default='YAMS',
+    help="key to store all monitoring info, default 'YAMS'")
 
 
 if __name__ == '__main__':
 
-    port = 8005
+    args = parser.parse_args()
     
-    heartbeatRecieverObj = HeartbeatReceiver()
+    heartbeatRecieverObj = HeartbeatReceiver(args.key)
 
-    reactor.listenUDP(port, heartbeatRecieverObj)
+    reactor.listenUDP(int(args.port), heartbeatRecieverObj)
+    print 'Listening on port', args.port
     reactor.run()
+    

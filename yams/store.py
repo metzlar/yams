@@ -9,3 +9,6 @@ def set(key, value):
 
 def get(key):
     return mc.get(key)
+
+def delete(key):
+    return mc.delete(key)

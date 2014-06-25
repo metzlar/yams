@@ -2,22 +2,33 @@ from twisted.internet.protocol import DatagramProtocol
 
 import yams.store
 import json
+import time
 
 
-YAMS = {}
+YAMS = [{}, time.time()]
 
 
 class HeartbeatReceiver(DatagramProtocol):
 
+    def __init__(self, key):
+        self.key = key
+        yams.store.delete(self.key)
+    
     def datagramReceived(self, data, (host, port)):
-        print "received %r from %s:%d" % (data, host, port)
+        stamp = time.time()
 
         try:
             data = json.loads(data)
         except Exception,e:
             print e
-        
-        YAMS.update({host:data})
-        yams.store.set('YAMS', json.dumps(YAMS))
+
+        data_stamped = {}
+        for k,v in data.iteritems():
+            data_stamped[k] = [v, stamp]
+
+        YAMS[0].update({'%s:%d'%(host, port):data_stamped})
+        YAMS[1] = stamp
+
+        yams.store.set(self.key, json.dumps(YAMS))
         
         #self.transport.write(data, (host, port))
