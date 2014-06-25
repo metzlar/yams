@@ -20,14 +20,14 @@ window.thresholds = [
 
     // alert when the cpu load is above 80%
     {
-	q: 'dd[data=cpu_load]',
-	gt: 80
+	q: 'dd[data=cpu_usage]',
+	gt: 60
     },
 
     // alert when the disk usage is above 80%
     {
 	q: 'dd[data=root_disk_usage]',
-	gt: 80
+	gt: 60
     }
 
 ];
