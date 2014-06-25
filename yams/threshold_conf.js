@@ -14,7 +14,7 @@ window.thresholds = [
 
     // alert when the count of a certain process is below 1
     {
-	q: 'dd[data|=count_of_]',
+	q: 'dd[data*=count_of_]',
 	lt: 1
     },
 
