@@ -1,0 +1,66 @@
+<html>
+
+  <head>
+     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+    
+    <script>
+    
+      var nowString;
+
+      function process(node, key, value){
+        var dt = $('dt[data="'+key+'"]', node);
+        if(dt.length === 0){
+          if(node.prop("tagName").toUpperCase()!='DL'){
+            console.log('not dl', node);
+            node = $('<dl></dl>').appendTo(node);
+          }
+          dt = $('<dt></dt>').appendTo(node);
+          dt.attr('data', key);
+          dt.text(key);
+        }
+
+        var dd = $('dd[data="'+key+'"]', node);
+        if(dd.length === 0){
+          dd = $('<dd></dd>').appendTo(node);
+          dd.attr('data', key);
+        }
+        
+        if(typeof value === 'object'){
+          var sub = $('dl', dd);
+          if(sub.length === 0){
+            sub = $(
+              '<dl></dl>'
+            ).appendTo(dd);
+          }
+          $.each(value, function(k, v){
+            process(sub, k, v);
+          });
+        } else {
+          dd.text(value);
+        }
+        dd.attr('updated', nowString);
+      }
+
+      $(function(){
+
+      var query = function(cb){
+      
+      $.getJSON('.', {query:1}, function( data ) {
+          nowString = (new Date()).toISOString();
+          process($('body'), 'YAMS', data);
+      });
+
+      setTimeout(query, 1900);
+      }
+
+      query();
+
+      });
+
+    </script>
+
+  </body>
+</html>
