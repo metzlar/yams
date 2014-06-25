@@ -12,6 +12,12 @@ window.thresholds = [
 	lt: 1
     }*/
 
+    // paint the hostname green
+    {
+	q: 'dd[data=hostname]',
+	class: 'green-em'
+    },
+
     // alert when the count of a certain process is below 1
     {
 	q: 'dd[data*=count_of_]',
