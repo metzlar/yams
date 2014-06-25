@@ -39,7 +39,7 @@ class HeartbeatSender(DatagramProtocol):
             files = os.listdir(self.file_path)
 
         result = {}
-        for k in files:
+        for k in sorted(files):
             result[k] = self.read_file(os.path.join(self.file_path, k))
         
         self.transport.write(json.dumps(result), (self.host, self.port))
