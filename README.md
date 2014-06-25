@@ -7,11 +7,19 @@ Work in progress.
 
 ## Clients
 
-Basically we have a process running on each monitored computer
-the process reads out some text file and sends the contents to 
-the server every 2 seconds. The file is supposed to be a JSON
-encoded structure containing key-value properties that are 
-monitored.
+The client (monitored computer) runs a 'collector' 
+process continuously. An example can be found in the bin folder:
+
+    bin/example_collector
+
+The collector process creates a file
+containing a metric's value for each metric being collected. And
+puts the file in the /tmp/yams folder and keeps its contents as
+much up to date as possible.
+
+a second process reads out all files in /tmp/yams and
+creates a JSON formatted UDP message containing all 
+metrics and send it to the server every 2 seconds.
 
 The process can be found in the bin folder:
 
@@ -19,9 +27,8 @@ The process can be found in the bin folder:
 
 ## Server
 
-A process on the server listens for incoming JSON messages from
-monitored computers and stores the contents (as it was read from
-the file on the client machine using the bin/client process) in
+A process on the server listens for incoming UDP JSON messages from
+monitored computers and stores the contents in
 a memcache value under the "YAMS" key.
 
 The process can be found in the bin folder:
