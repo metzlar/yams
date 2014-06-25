@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+
+from yams.client import HeartbeatSender
+from twisted.internet import reactor
+import argparse
+
+
+parser = argparse.ArgumentParser(
+    description='''
+    Read a JSON <file> and send the contents
+    repeatedly to a YAMS server at <host>:<port>
+    ''')
+parser.add_argument(
+    'file', help='path to JSON file')
+parser.add_argument(
+    'host', help='host of YAMS server')
+parser.add_argument(
+    'port', help='port of YAMS server')
+    
+
+if __name__ == '__main__':
+
+    args = parser.parse_args()
+    
+    heartbeatSenderObj = HeartbeatSender(
+        str(args.file), str(args.host), int(args.port))
+
+    reactor.listenUDP(0, heartbeatSenderObj)
+    reactor.run()

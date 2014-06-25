@@ -1,0 +1,3 @@
+#!/bin/bash
+
+twistd -n web --wsgi=yams.wsgi.application
