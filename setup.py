@@ -7,7 +7,8 @@ setup(
   cmdclass={'upload':lambda x:None},
   install_requires=[
       'twisted',
-      'python-memcached'
+      'python-memcached',
+      'psutil'
   ],
 )# pragma: no cover 
  

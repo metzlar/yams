@@ -53,21 +53,22 @@
       function checkTresholds(){
         var th = [
           {q:$('dd[data=load]'), gt:1, lt:1},
-          {q:$('dd[data=number_of_peer_procs]'), lt:2}
+          {q:$('dd[data=number_of_peer_procs]'), lt:2},
+          {q:$('dd[data=cpu_usage]'), gt:50.0}
         ];
 
         for(k in th){
           th[k].q.each(function(){
             me = $(this);
             if('gt' in th[k]){
-              if(parseInt(me.text())>th[k].gt){
+              if(me.text()>th[k].gt){
                 me.addClass('gt-alert');
               } else {
                 me.removeClass('gt-alert');
               }
             }
             if('lt' in th[k]){
-              if(parseInt(me.text())<th[k].lt){
+              if(me.text()<th[k].lt){
                 me.addClass('lt-alert');
               } else {
                 me.removeClass('lt-alert');
