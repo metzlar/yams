@@ -48,6 +48,36 @@ The web page queries the wsgi application every 1.9 seconds.
 The wsgi application 'serves' the contents of the memcache "YAMS"
 value.
 
+## Thresholds
+
+Set thresholds by defining `window.thresholds` in `yams/threshold_conf.js`. 
+This variable must contain a list of objects, each object representing a threshold:
+
+    [{q:JQUERY_QUERY, lt:LESS_THEN, gt:GREATER_THEN}, ...]
+   
+So to have a threshold for cpu_usage of 80%:
+
+    ... {
+	    q: 'dd[data=cpu_usage]',
+	    gt: 80
+    }, ...
+    
+A threshold for at least one memcached proces:
+
+    ... {
+	    q: 'dd[data=count_of_memcached]',
+	    lt: 1
+    }, ...
+
+A threshold for less then 8 apached processes for server `1.2.3.4`:
+
+    ... {
+	    q: 'dd[data=1.2.3.4] dd[data=count_of_apached]',
+	    lt: 8
+    }, ...
+
+While metrics exceed (or fall short in case of `lt`) their threshold 
+their `<dd>` tag will have the `gt-alert` or `.lt-alert` css class. 
 
 TODOs
 
