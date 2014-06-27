@@ -47,6 +47,10 @@
          margin-bottom:0px!important;
        }
 
+       .graphite{
+         display:block;
+         cursor: pointer;
+       }
        
      </style>
      
@@ -58,7 +62,43 @@
   <body>
     
     <script>
-    
+      window.GRAPHITE_IMAGE = [
+        '/render?from=-2hours',
+        'until=now',
+        'width=200',
+        'height=70',
+        'graphOnly=true',
+        'areaMode=first',
+        'bgcolor=gold',
+        'target=yams.'
+      ].join('&');
+
+      function drawGraphite(dd){
+        if(!window.graphitePrefix) return;
+        var host = dd.parents('dd').first().attr('data');
+        host = host.replace(/\./g, '_');
+        var img = $('img', dd);
+        if(img.length === 0){
+          img = $('<img />').appendTo(dd);
+          img.addClass('graphite');
+          img.click(function(){
+            window.open(
+              window.graphitePrefix+
+              '/graphlot/?target=yams.'+
+              host + '.' + dd.attr('data')
+            );
+          });
+        }
+        img.attr('src', ( 
+          window.graphitePrefix +
+          window.GRAPHITE_IMAGE +
+          host +
+          '.' +
+          dd.attr('data')
+        ) + '&_uniq=' + dd.attr('updated') );
+      }
+
+
       function checkThresholds(){
         var th = window.thresholds || [
           {q:'dd[data=load]', gt:1, lt:1},
@@ -155,7 +195,12 @@
               process(sub, k, v);
             });
           } else {
-            dd.text(value[0]);
+	    var span = $('span', dd);
+	    if(span.length===0){
+	      span = $('<span></span>').appendTo(dd);
+	    }
+            span.text(value[0]);
+	    drawGraphite(dd);
           }
         } else {
           $.each(value, function(k, v){

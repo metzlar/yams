@@ -17,13 +17,23 @@ parser.add_argument(
     '--memcache-key', dest='key',
     default='YAMS',
     help="key to store all monitoring info, default 'YAMS'")
+parser.add_argument(
+    '--carbon-host', dest='chost',
+    default=None,
+    help="Host of graphite's carbon agent, optional")
+parser.add_argument(
+    '--carbon-port', dest='cport',
+    default=None,
+    help="Port of graphite's carbon agent, optional")
+
 
 
 if __name__ == '__main__':
 
     args = parser.parse_args()
     
-    heartbeatRecieverObj = HeartbeatReceiver(args.key)
+    heartbeatRecieverObj = HeartbeatReceiver(
+        args.key, args.chost, args.cport)
 
     reactor.listenUDP(int(args.port), heartbeatRecieverObj)
     print 'Listening on port', args.port

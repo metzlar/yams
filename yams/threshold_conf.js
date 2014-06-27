@@ -1,3 +1,5 @@
+window.graphitePrefix = 'http://localhost:8080';
+
 /* Example threshold config
  * 
  * Make sure to define all thresholds in window.thresholds
