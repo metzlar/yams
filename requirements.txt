@@ -1,0 +1,13 @@
+Django==1.5
+Twisted==11.1.0
+-e git+git@github.com:metzlar/yams.git@3f1dd18653ccb08c5d297e7a981cf2d8508b5f50#egg=YAMS_Yet_Another_Monitoring_Service_-dev
+argparse==1.2.1
+ceres==0.10.0
+django-tagging==0.3.2
+ipdb==0.8
+ipython==2.1.0
+psutil==2.1.1
+python-memcached==1.53
+whisper==0.9.12
+wsgiref==0.1.2
+zope.interface==4.1.1
