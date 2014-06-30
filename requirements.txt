@@ -1,6 +1,6 @@
 Django==1.5
 Twisted==11.1.0
--e git+git@github.com:metzlar/yams.git@3f1dd18653ccb08c5d297e7a981cf2d8508b5f50#egg=YAMS_Yet_Another_Monitoring_Service_-dev
+-e git+https://github.com/metzlar/yams#egg=yams
 argparse==1.2.1
 ceres==0.10.0
 django-tagging==0.3.2
