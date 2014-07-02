@@ -145,6 +145,36 @@
         }
       }
 
+      function swapIfGreater(lhs, rhs){
+        //lhs and rhs point to neighboring dl in a dd.bordered
+        if($('dt',lhs).first().text().localeCompare(
+          $('dt',rhs).first().text()) > 0)
+        ){
+	  //swap
+	  rhs.insertBefore(lhs);
+          return true;
+        }
+        return false;
+      }
+
+      function sortDL(from){
+	var with = from.next('dl');
+        if(with.length===0) return false;
+        if(swapIfGreater(from, with)){
+	  return sortDL(from);
+	} else {
+	  return sortDL(with);
+	}
+      }
+
+      function sortDD(dd){
+	var f;
+	while(true){
+	  f = $('dl', dd).first();
+	  if(sortDL(f) === false) break;
+	}
+      }
+
       function checkUpdates(){
         var me, ud, dif, nd, l, span;
         nd = $('dd[data=YAMS][updated]').attr('updated');
@@ -234,7 +264,12 @@
 	  var machines = $('dl dl dl');
 
 	  machines.addClass('dl-horizontal');
-	  machines.parent().addClass('bordered');
+	      
+	  var bordered = machines.parent();
+	  bordered.addClass('bordered');
+          bordered.each(function(){
+	    sortDD($(this));
+          });
 
 	  var labels = $('.bordered').prev();
           labels.addClass('m-label');
