@@ -40,7 +40,14 @@
        }
 
        .bordered{
-         border:1px solid;
+         float: left;
+         padding: 20px;
+         margin: 5px;
+         background-color: lightgrey;
+       }
+
+       .m-label{
+         height:0;
        }
 
        .dl-horizontal{
@@ -220,6 +227,9 @@
 
 	  machines.addClass('dl-horizontal');
 	  machines.parent().addClass('bordered');
+
+	  var labels = $('.bordered').prev();
+          labels.addClass('m-label');
       });
 
       setTimeout(query, 1900);
