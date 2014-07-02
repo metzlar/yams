@@ -12,6 +12,14 @@
          font-size:12px;
        }
 
+       .title{
+         font-size: 30pt;
+         font-family: sans;
+         font-style: italic;
+         text-shadow: 3px 3px lightgrey;
+         margin: 5px;
+       }
+
        span.alert,
        span.warn{
          margin:5px;
@@ -230,6 +238,8 @@
 
 	  var labels = $('.bordered').prev();
           labels.addClass('m-label');
+
+	  $('dt[data=YAMS]').addClass('title');
       });
 
       setTimeout(query, 1900);
