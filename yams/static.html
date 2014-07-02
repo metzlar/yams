@@ -158,12 +158,12 @@
       }
 
       function sortDL(from){
-	var with = from.next('dl');
-        if(with.length===0) return false;
-        if(swapIfGreater(from, with)){
+	var w = from.next('dl');
+        if(w.length===0) return false;
+        if(swapIfGreater(from, w)){
 	  return sortDL(from);
 	} else {
-	  return sortDL(with);
+	  return sortDL(w);
 	}
       }
 
