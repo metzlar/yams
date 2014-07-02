@@ -22,7 +22,10 @@ class ProcessCollector(BaseCollector):
         def _f(property_name, query):
             result = 0
             for p in psutil.process_iter():
-                if query in p.name():
+                if (
+                    query in p.name() or
+                    query in ' '.join(p.cmdline())
+                ):
                     result = result + 1
             self.write(property_name, result)
         self.schedule(_f, property_name, query)
