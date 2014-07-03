@@ -12,5 +12,6 @@ if __name__ == '__main__':
    collector.count_process('count_of_memcached', 'memcached')
    collector.disk_usage('root_disk_usage', '/')
    collector.cpu_usage('cpu_usage')
+   collector.memory_available()
 
    collector.run()

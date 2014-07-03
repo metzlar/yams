@@ -5,6 +5,14 @@ import psutil
 
 class ProcessCollector(BaseCollector):
 
+    def memory_available(self, property_name='memory_available'):
+        def _f(property_name):
+            vmem = psutil.virtual_memory()
+            self.write(
+                property_name, vmem.available
+            )
+        self.schedule(_f, property_name)
+    
     def disk_usage(self, property_name, path):
         def _f(property_name, path):
             self.write(
