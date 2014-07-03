@@ -21,7 +21,7 @@ class NetworkCollector(BaseCollector):
                 # [tcp_id, uid, l_host, r_host, state, pid, exe]
                 if all([
                     pc in str(line[6]),
-                    line[2] == '0.0.0.0:'+str(pt),
+                    line[2].endswith(':'+str(pt)),
                     line[4] == 'LISTEN',
                 ]):
                     result += 1
