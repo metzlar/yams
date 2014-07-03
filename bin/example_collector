@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
    netc = NetworkCollector()
 
-   netc.tcp_listening('apache', 443)   
+   netc.tcp_listening('apache', [443, 80])   
 
    collector.append(netc)
    

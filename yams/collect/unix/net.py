@@ -12,19 +12,25 @@ class NetworkCollector(BaseCollector):
         
 
     def tcp_listening(self, proc, port, property_name = None):
+        if type(port) != list:
+            port = [port]
+
+        port = [str(p) for p in port]
+            
         if property_name is None:
-            property_name = '%s_on_%s' % (proc, str(port))
+            property_name = '%s_on_%s' % (proc, '_'.join(port))
             
         def _f(pname, pc, pt, lines):
             result = 0
             for line in lines:
-                # [tcp_id, uid, l_host, r_host, state, pid, exe]
-                if all([
-                    pc in str(line[6]),
-                    line[2].endswith(':'+str(pt)),
-                    line[4] == 'LISTEN',
-                ]):
-                    result += 1
+                for p in pt:
+                    # [tcp_id, uid, l_host, r_host, state, pid, exe]
+                    if all([
+                        pc in str(line[6]),
+                        line[2].endswith(':'+str(p)),
+                        line[4] == 'LISTEN',
+                    ]):
+                        result += 1
 
             self.write(pname, result)
 
