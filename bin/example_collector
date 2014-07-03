@@ -1,17 +1,29 @@
 #!/usr/bin/env python
 
+from yams.collect import MultiCollector
 from yams.collector.ps import ProcessCollector
+from yams.collector.net import NetworkCollector
 
 if __name__ == '__main__':
 
    # we are run by a CRONJOB every minute so kill when
    # our collector exceeds 59 seconds
-   collector = ProcessCollector(limit_execution_seconds = 59)
+   collector = MultiCollector(limit_execution_seconds = 59) 
+    
+   procc = ProcessCollector()
 
-   collector.count_process('count_of_apaches', 'apache')
-   collector.count_process('count_of_memcached', 'memcached')
-   collector.disk_usage('root_disk_usage', '/')
-   collector.cpu_usage('cpu_usage')
-   collector.memory_available()
+   procc.count_process('count_of_apaches', 'apache')
+   procc.count_process('count_of_memcached', 'memcached')
+   procc.disk_usage('root_disk_usage', '/')
+   procc.cpu_usage('cpu_usage')
+   procc.memory_available()
 
+   collector.append(procc)
+
+   netc = NetworkCollector()
+
+   netc.tcp_listening('apache', 443)   
+
+   collector.append(netc)
+   
    collector.run()

@@ -36,3 +36,28 @@ class BaseCollector(list):
                     sys.exit()
                 
                 time.sleep(0.5)
+
+
+class MultiCollector(BaseCollector):
+    def schedule(self, *args, **kwargs):
+        raise Exception((
+            'Do not schedule using this collector! '
+            'Append collectors from yams.collector to this '
+            'collector instead.'
+        ))
+    
+    def run(self):
+        while(True):
+            for collector in self:
+                for (func, args, kwargs) in collector:
+                    func(*args, **kwargs)
+
+                    if (
+                        self.limit_execution_seconds > 0 and
+                        (
+                            time.time() - self.start
+                        ) > self.limit_execution_seconds
+                    ):
+                        sys.exit()
+                
+                        time.sleep(0.5)
