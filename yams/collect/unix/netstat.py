@@ -6,7 +6,7 @@ import os
 import re
 import glob
 
-PROC_TCP = "/proc/net/tcp"
+PROC_TCP = ["/proc/net/tcp", "/proc/net/tcp6"]
 STATE = {
         '01':'ESTABLISHED',
         '02':'SYN_SENT',
@@ -23,10 +23,13 @@ STATE = {
 
 def _load():
     ''' Read the table of tcp connections & remove header  '''
-    with open(PROC_TCP,'r') as f:
-        content = f.readlines()
-        content.pop(0)
-    return content
+    result = []
+    for p in PROC_TCP:
+        with open(p,'r') as f:
+            content = f.readlines()
+            content.pop(0)
+        result = result + content
+    return result
 
 def _hex2dec(s):
     return str(int(s,16))
