@@ -60,4 +60,4 @@ class MultiCollector(BaseCollector):
                     ):
                         sys.exit()
                 
-                        time.sleep(0.5)
+                    time.sleep(0.5)
